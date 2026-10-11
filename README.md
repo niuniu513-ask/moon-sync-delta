@@ -44,6 +44,7 @@
 已验证编译器 `moonc v0.10.14`、`moon 0.1.20260920`。文件入口还需要 Node.js；独立文件验证需要 Python 3。
 
 ```powershell
+moon update
 moon check --deny-warn --target all
 moon build --target all
 moon test --deny-warn --target all
