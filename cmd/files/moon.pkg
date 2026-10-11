@@ -1,0 +1,9 @@
+import {
+  "niuniu513-ask/moon-sync-delta" @sync,
+  "moonbitlang/core/env",
+  "moonbitlang/core/string",
+}
+
+pkgtype(kind: "executable")
+
+supported_targets = "+js"

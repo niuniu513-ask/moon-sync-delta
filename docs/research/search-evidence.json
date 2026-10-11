@@ -1,0 +1,299 @@
+{
+  "index_sha256": "6073AC935483BCE5AE6842FF4F41955690BAE53420C93F68817C6267224CEE19",
+  "relevant_modules": [
+    {
+      "name": "bzhangui/moonrestore",
+      "version": "0.1.0",
+      "description": "Verifiable incremental backups with content-addressed storage and safe restore, powered by MoonBit.",
+      "keywords": [
+        "backup",
+        "restore",
+        "integrity",
+        "deduplication"
+      ],
+      "repository": "https://github.com/bzhangui/moonrestore"
+    },
+    {
+      "name": "cn-ybm/MoonHashKit",
+      "version": "0.3.0",
+      "description": "Content-defined chunking, rolling fingerprints, and deduplication for MoonBit.",
+      "keywords": [
+        "hash",
+        "rolling",
+        "content-defined-chunking",
+        "dedupe",
+        "sync"
+      ],
+      "repository": "https://github.com/cn-ybm/MoonHashKit"
+    },
+    {
+      "name": "didiLjf/moon-record-linkage",
+      "version": "0.1.5",
+      "description": "A native MoonBit engine for record linkage, entity matching, deduplication, explainable scoring, and reproducible evaluation.",
+      "keywords": [
+        "record-linkage",
+        "entity-resolution",
+        "deduplication",
+        "blocking",
+        "entity-matching"
+      ],
+      "repository": "https://github.com/didiLjf/moon-record-linkage"
+    },
+    {
+      "name": "Hjyyutr/moon-minhash",
+      "version": "0.1.0",
+      "description": "High-performance MinHash, LSH indexing, b-bit compression, streaming deduplication & document clustering for MoonBit",
+      "keywords": [
+        "minhash",
+        "lsh",
+        "deduplication",
+        "similarity",
+        "jaccard"
+      ],
+      "repository": "https://github.com/Hjyyutr/moon-minhash"
+    },
+    {
+      "name": "hutingyu-nuist/moonsqlguard",
+      "version": "0.1.1",
+      "description": "MoonBit port of the libinjection SQLi core",
+      "keywords": [
+        "sqli",
+        "libinjection",
+        "sql-injection",
+        "tokenizer",
+        "fingerprint"
+      ],
+      "repository": "https://github.com/hutingyu-nuist/moonsqlguard"
+    },
+    {
+      "name": "JJ-ai-nb/moonbit-shard-note",
+      "version": "0.2.1",
+      "description": "Printable short-message shard cards with checksum validation, multi-parity recovery, diagnostics, and conformance scenarios.",
+      "keywords": [
+        "moonbit",
+        "offline",
+        "recovery",
+        "parity",
+        "gf256",
+        "resilient",
+        "checksum",
+        "diagnostics",
+        "paper-backup"
+      ],
+      "repository": "https://github.com/JJ-ai-nb/moonbit-shard-note.git"
+    },
+    {
+      "name": "lin2077-zeming/moonecho",
+      "version": "0.1.0",
+      "description": "Local-first acoustic fingerprint search, alignment, and WASM workbench for MoonBit.",
+      "keywords": [
+        "audio",
+        "fingerprint",
+        "search",
+        "alignment",
+        "wasm"
+      ],
+      "repository": "https://github.com/lin2077-zeming/MoonEcho"
+    },
+    {
+      "name": "Milky2018/lockstep",
+      "version": "0.1.2",
+      "description": "Synchronize module versions and internal dependencies in a MoonBit workspace.",
+      "keywords": [
+        "bump",
+        "version",
+        "lockstep"
+      ],
+      "repository": "https://github.com/Milky2018/lockstep"
+    },
+    {
+      "name": "mizchi/bit_fingerprint",
+      "version": "0.48.0",
+      "description": "Workspace fingerprint",
+      "keywords": [
+        "git",
+        "workspace"
+      ],
+      "repository": "https://github.com/mizchi/bit-vcs"
+    },
+    {
+      "name": "trail-it/moonllm_adapter",
+      "version": "0.1.0",
+      "description": "Adapter mapping DC-Z-lab/moonllm streaming chunks onto MoonStream sessions.",
+      "keywords": [
+        "llm",
+        "adapter",
+        "streaming",
+        "tool-call"
+      ],
+      "repository": "https://github.com/trail-it/moonstream"
+    },
+    {
+      "name": "trail-it/moonstream",
+      "version": "0.1.1",
+      "description": "Incremental, chunk-invariant parsing of streaming JSON tool-call arguments.",
+      "keywords": [
+        "llm",
+        "json",
+        "streaming",
+        "parser",
+        "incremental"
+      ],
+      "repository": "https://github.com/trail-it/moonstream"
+    },
+    {
+      "name": "wch6766/MoonSecureCodec",
+      "version": "0.1.1",
+      "description": "A production-grade software supply chain security, multi-base codec and Merkle tree verification toolkit in MoonBit.",
+      "keywords": [
+        "supply-chain",
+        "fingerprint",
+        "merkle",
+        "codec",
+        "crypto",
+        "sbom",
+        "hash"
+      ],
+      "repository": "https://github.com/wch6766/moon_secure_codec"
+    },
+    {
+      "name": "wqbcs/moon_collections",
+      "version": "0.2.4",
+      "description": "DETERMINISTIC × VERIFIABLE × COMPOSABLE collections for MoonBit/WASM — 12 ordered structures, FNV-1a fingerprints with lazy caching (all 11 Deterministic structs), 311 tests. Same input → same output → same fingerprint, always.",
+      "keywords": [
+        "collections",
+        "indexmap",
+        "bitset",
+        "bitflags",
+        "counter",
+        "default-map",
+        "deterministic",
+        "data-structure",
+        "moonbit",
+        "wasm",
+        "wasm-gc",
+        "fingerprint",
+        "ringbuffer",
+        "sparse-set",
+        "sorted-map",
+        "disjoint-set",
+        "ordered-map",
+        "verifiable",
+        "composable",
+        "ecs"
+      ],
+      "repository": "https://github.com/wqbcs/moon_collections"
+    },
+    {
+      "name": "WSH-ai-nb/reslock",
+      "version": "0.1.0",
+      "description": "Deterministic resource lockfile and integrity manifest toolkit for MoonBit asset pipelines.",
+      "keywords": [
+        "moonbit",
+        "assets",
+        "fingerprint",
+        "manifest",
+        "wasm",
+        "resource-pipeline"
+      ],
+      "repository": "https://github.com/WSH-ai-nb/reslock.git"
+    },
+    {
+      "name": "xgzh1111/moonchunk",
+      "version": "0.1.0",
+      "description": "Content-defined chunking and incremental synchronization primitives for MoonBit",
+      "keywords": [
+        "chunking",
+        "deduplication",
+        "merkle",
+        "sync",
+        "storage"
+      ],
+      "repository": "https://github.com/xgzh1111/1234"
+    },
+    {
+      "name": "yangxixi00/moon_vcdiff",
+      "version": "0.1.0",
+      "description": "A pure MoonBit RFC 3284 VCDIFF encoder, decoder, inspector, and CLI",
+      "keywords": [
+        "vcdiff",
+        "delta",
+        "binary",
+        "rfc3284",
+        "compression"
+      ],
+      "repository": "https://github.com/yangxixi00/moon-vcdiff"
+    },
+    {
+      "name": "yhsrtty/moontls-parser",
+      "version": "0.1.2",
+      "description": "TLS ClientHello parser and JA3/JA4-style fingerprint toolkit for MoonBit traffic-audit probes.",
+      "keywords": [
+        "tls",
+        "ja3",
+        "ja4",
+        "fingerprint",
+        "security",
+        "parser"
+      ],
+      "repository": "https://github.com/yhsrtty/MoonTLS-Parser"
+    },
+    {
+      "name": "Yingqingxue/mooncas",
+      "version": "0.1.0",
+      "description": "A portable content-addressed storage kernel for MoonBit",
+      "keywords": [
+        "cas",
+        "storage",
+        "sha256",
+        "deduplication"
+      ],
+      "repository": "https://github.com/Yingqingxue/mooncas"
+    },
+    {
+      "name": "zbhzs1/moonbit-phonetic",
+      "version": "0.3.0",
+      "description": "Deterministic phonetic encoding, explainable name matching, indexing, and deduplication for MoonBit",
+      "keywords": [
+        "phonetic",
+        "name-matching",
+        "soundex",
+        "metaphone",
+        "deduplication"
+      ],
+      "repository": "https://github.com/zbhzs1/moonbit-phonetic"
+    },
+    {
+      "name": "zlhahaha/zarr",
+      "version": "0.7.0",
+      "description": "Zarr v2 and v3 chunked array storage for MoonBit",
+      "keywords": [
+        "zarr",
+        "array",
+        "scientific-data",
+        "storage"
+      ],
+      "repository": "https://github.com/zlhahaha/zarr"
+    }
+  ],
+  "checked_on": "2026-10-11 Asia/Shanghai",
+  "conclusion": "No exact receiver-signature-driven MoonBit rsync workflow found within the recorded scope; adjacent projects exist; not a global uniqueness claim.",
+  "module_count": 2938,
+  "github_queries": [
+    {
+      "total_count": 17,
+      "query": "rsync moonbit in:name,description,readme",
+      "incomplete_results": false
+    },
+    {
+      "total_count": 0,
+      "query": "librsync language:MoonBit",
+      "incomplete_results": false
+    },
+    {
+      "query": "rsync language:MoonBit",
+      "status": "rate_limited"
+    }
+  ],
+  "endpoint": "https://mooncakes.io/api/v0/modules"
+}

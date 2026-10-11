@@ -1,0 +1,67 @@
+{
+  "oracle": "Python hashlib + independent frame reader",
+  "data": "controlled synthetic bytes, not a production benchmark",
+  "scenarios": [
+    {
+      "scenario": "backup_insert",
+      "output_bytes": 65546,
+      "signature_bytes": 8788,
+      "total_wire_bytes": 8960,
+      "copied_bytes": 65536,
+      "literal_bytes": 10,
+      "delta_bytes": 172,
+      "exact": true
+    },
+    {
+      "scenario": "asset_replace",
+      "output_bytes": 65536,
+      "signature_bytes": 8788,
+      "total_wire_bytes": 9471,
+      "copied_bytes": 65024,
+      "literal_bytes": 512,
+      "delta_bytes": 683,
+      "exact": true
+    },
+    {
+      "scenario": "replica_append",
+      "output_bytes": 65888,
+      "signature_bytes": 8788,
+      "total_wire_bytes": 9302,
+      "copied_bytes": 65536,
+      "literal_bytes": 352,
+      "delta_bytes": 514,
+      "exact": true
+    },
+    {
+      "scenario": "empty",
+      "output_bytes": 0,
+      "signature_bytes": 8788,
+      "total_wire_bytes": 8936,
+      "copied_bytes": 0,
+      "literal_bytes": 0,
+      "delta_bytes": 148,
+      "exact": true
+    },
+    {
+      "scenario": "reorder",
+      "output_bytes": 65536,
+      "signature_bytes": 8788,
+      "total_wire_bytes": 8954,
+      "copied_bytes": 65536,
+      "literal_bytes": 0,
+      "delta_bytes": 166,
+      "exact": true
+    },
+    {
+      "scenario": "fully_changed",
+      "output_bytes": 65536,
+      "signature_bytes": 8788,
+      "total_wire_bytes": 74477,
+      "copied_bytes": 0,
+      "literal_bytes": 65536,
+      "delta_bytes": 65689,
+      "exact": true
+    }
+  ],
+  "negative_checks": "passed"
+}
