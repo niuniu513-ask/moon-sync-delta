@@ -105,6 +105,7 @@ python scripts/verify_files.py
 签名已缓存时可以只比较差量帧；小文件、完全变化的内容通常适合全量传输。
 本库提供统计值，传输方式由应用选择。合成实验见 [docs/VALIDATION.md](docs/VALIDATION.md)。
 `delta.worth_sending(signature_bytes=signature_wire.length())` 可直接比较两帧总开销；
+已有签名对象时可使用 `sig.wire_size()` 获得准确帧长度，无需额外编码分配。
 文件入口也会输出 `recommend=delta` 或 `recommend=full`，但不会擅自更改输出文件类型。
 
 ## 边界与许可
@@ -113,4 +114,4 @@ python scripts/verify_files.py
 项目帧格式见 [docs/WIRE_FORMAT.md](docs/WIRE_FORMAT.md)。SHA-256 校验不替代传输认证。
 
 项目自有代码采用 MIT；SHA-256 复用 Apache-2.0 的 `gmlewis/sha256@0.18.0`，来源及传递依赖见 SOURCES。
-CI 已配置，运行结果以 GitHub Actions 为准；Mooncakes 发布尚未完成。
+CI 对 Linux 与 Windows 分别执行四后端检查、构建、测试和独立文件验证，运行结果以 GitHub Actions 为准；Mooncakes 发布尚未完成。
