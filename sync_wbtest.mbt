@@ -6,9 +6,46 @@ fn roundtrip(basis : Bytes, updated : Bytes, block : Int) -> Delta raise {
   let delta = create_delta(sig, updated)
   let decoded = decode_delta(encode_delta(delta))
   assert_eq(apply_delta(basis, decoded), updated)
+  verify_delta(basis, decoded)
   assert_eq(encode_delta(decoded), encode_delta(delta))
   assert_eq(delta.statistics().wire_bytes, encode_delta(delta).length())
   delta
+}
+
+///|
+test "verification rejects bad operations checksums lengths and budgets" {
+  let delta = create_delta(signature(b"old-data", block_size=4), b"new-data")
+  for
+    bad in [
+      Delta::{ ..delta, operations: [Copy(8, 1)], },
+      Delta::{ ..delta, operations: [Literal(b"")], },
+      Delta::{ ..delta, output_length: 1, },
+      Delta::{ ..delta, output_length: 9, },
+      Delta::{ ..delta, output_digest: digest(b"wrong"[:]), },
+    ] {
+    let rejected = try verify_delta(b"old-data", bad) catch {
+      CorruptData(_) => true
+      _ => false
+    } noraise {
+      _ => false
+    }
+    assert_true(rejected)
+  }
+  let rejected = try verify_delta(b"OLD-data", delta) catch {
+    CorruptData(_) => true
+    _ => false
+  } noraise {
+    _ => false
+  }
+  assert_true(rejected)
+  let limited = Limits::{ ..Limits::default(), max_operations: 0, }
+  let rejected = try verify_delta(b"old-data", delta, limits=limited) catch {
+    LimitExceeded(_) => true
+    _ => false
+  } noraise {
+    _ => false
+  }
+  assert_true(rejected)
 }
 
 ///|

@@ -26,6 +26,8 @@ pub fn rolling_checksum(BytesView) -> UInt
 
 pub fn signature(Bytes, block_size? : Int, limits? : Limits) -> Signature raise SyncError
 
+pub fn verify_delta(Bytes, Delta, limits? : Limits) -> Unit raise SyncError
+
 // Errors
 pub suberror SyncError {
   InvalidInput(String)

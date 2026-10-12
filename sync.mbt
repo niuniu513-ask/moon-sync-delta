@@ -207,6 +207,68 @@ pub fn Delta::matches_basis(
 }
 
 ///|
+fn operation_view(
+  basis : Bytes,
+  op : Operation,
+  remaining : Int,
+) -> BytesView raise SyncError {
+  let view = match op {
+    Copy(offset, length) => {
+      if offset < 0 ||
+        length <= 0 ||
+        offset > basis.length() ||
+        length > basis.length() - offset {
+        raise CorruptData("copy outside basis")
+      }
+      basis[offset:offset + length]
+    }
+    Literal(data) => {
+      if data.is_empty() {
+        raise CorruptData("invalid literal length")
+      }
+      data[:]
+    }
+  }
+  if view.length() > remaining {
+    raise CorruptData("output length exceeded")
+  }
+  view
+}
+
+///|
+/// Verifies the reconstructed byte stream without allocating output bytes.
+/// Basis and delta remain in memory; this is not a streaming file API.
+pub fn verify_delta(
+  basis : Bytes,
+  delta : Delta,
+  limits? : Limits = Limits::default(),
+) -> Unit raise SyncError {
+  check_limits(limits)
+  check_size(delta.output_length, limits)
+  if delta.operations.length() > limits.max_operations {
+    raise LimitExceeded("delta operation limit exceeded")
+  }
+  if !delta.matches_basis(basis, limits~) {
+    raise CorruptData("basis does not match signature")
+  }
+  let hash = @sha256.Digest::new()
+  let mut length = 0
+  for op in delta.operations {
+    let view = operation_view(basis, op, delta.output_length - length)
+    for b in view {
+      hash.write(b)
+    }
+    length += view.length()
+  }
+  if length != delta.output_length {
+    raise CorruptData("output length mismatch")
+  }
+  if hash.check_sum() != delta.output_digest {
+    raise CorruptData("output checksum mismatch")
+  }
+}
+
+///|
 pub fn apply_delta(
   basis : Bytes,
   delta : Delta,
@@ -223,29 +285,8 @@ pub fn apply_delta(
   }
   let out : Array[Byte] = []
   for op in delta.operations {
-    match op {
-      Copy(offset, length) => {
-        if offset < 0 ||
-          length <= 0 ||
-          offset > basis.length() ||
-          length > basis.length() - offset {
-          raise CorruptData("copy outside basis")
-        }
-        if length > delta.output_length - out.length() {
-          raise CorruptData("output length exceeded")
-        }
-        for b in basis[offset:offset + length] {
-          out.push(b)
-        }
-      }
-      Literal(data) => {
-        if data.is_empty() || data.length() > delta.output_length - out.length() {
-          raise CorruptData("invalid literal length")
-        }
-        for b in data {
-          out.push(b)
-        }
-      }
+    for b in operation_view(basis, op, delta.output_length - out.length()) {
+      out.push(b)
     }
   }
   if out.length() != delta.output_length {
