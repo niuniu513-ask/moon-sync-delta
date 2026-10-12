@@ -12,6 +12,17 @@ fn roundtrip(basis : Bytes, updated : Bytes, block : Int) -> Delta raise {
 }
 
 ///|
+test "signature cost agrees with encoding across block geometries" {
+  for n = 0; n < 40; n = n + 1 {
+    let basis = Bytes::makei(n, fn(i) { i.to_byte() })
+    for block in [1, 3, 16, 2048] {
+      let sig = signature(basis, block_size=block)
+      assert_eq(sig.wire_size(), encode_signature(sig).length())
+    }
+  }
+}
+
+///|
 test "standard SHA-256 vectors and unsigned rolling checksum" {
   assert_eq(
     digest(b""[:]),

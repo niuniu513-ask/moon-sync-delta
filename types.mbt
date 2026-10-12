@@ -85,6 +85,12 @@ pub fn Signature::basis_digest(self : Signature) -> String {
 }
 
 ///|
+/// Exact version-1 frame cost without allocating or encoding the frame.
+pub fn Signature::wire_size(self : Signature) -> Int {
+  84 + 68 * self.blocks.length()
+}
+
+///|
 pub(all) enum Operation {
   Literal(Bytes)
   Copy(Int, Int)

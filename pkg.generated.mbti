@@ -78,6 +78,7 @@ pub fn Signature::basis_digest(Self) -> String
 pub fn Signature::basis_length(Self) -> Int
 pub fn Signature::block_count(Self) -> Int
 pub fn Signature::block_size(Self) -> Int
+pub fn Signature::wire_size(Self) -> Int
 
 pub(all) struct Statistics {
   output_bytes : Int

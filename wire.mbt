@@ -93,7 +93,7 @@ pub fn encode_signature(
     raise LimitExceeded("signature block limit exceeded")
   }
   check_size(sig.basis_length, limits)
-  check_size(84 + sig.blocks.length() * 68, limits)
+  check_size(sig.wire_size(), limits)
   let out : Array[Byte] = []
   put_bytes(out, b"MSIG"[:])
   put_u32(out, 1U)
