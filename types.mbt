@@ -123,6 +123,22 @@ pub fn Delta::output_digest(self : Delta) -> String {
 }
 
 ///|
+/// Receiver version metadata for choosing the required local basis.
+pub fn Delta::basis_length(self : Delta) -> Int {
+  self.basis_length
+}
+
+///|
+pub fn Delta::basis_digest(self : Delta) -> String {
+  self.basis_digest
+}
+
+///|
+pub fn Delta::output_length(self : Delta) -> Int {
+  self.output_length
+}
+
+///|
 pub(all) struct Statistics {
   output_bytes : Int
   copied_bytes : Int

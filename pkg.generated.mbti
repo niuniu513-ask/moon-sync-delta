@@ -44,8 +44,12 @@ pub struct Delta {
   output_digest : String
   operations : Array[Operation]
 }
+pub fn Delta::basis_digest(Self) -> String
+pub fn Delta::basis_length(Self) -> Int
+pub fn Delta::matches_basis(Self, Bytes, limits? : Limits) -> Bool raise SyncError
 pub fn Delta::operations(Self) -> Array[Operation]
 pub fn Delta::output_digest(Self) -> String
+pub fn Delta::output_length(Self) -> Int
 pub fn Delta::statistics(Self) -> Statistics
 pub fn Delta::worth_sending(Self, signature_bytes? : Int) -> Bool raise SyncError
 

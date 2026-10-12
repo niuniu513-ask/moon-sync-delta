@@ -23,6 +23,25 @@ test "signature cost agrees with encoding across block geometries" {
 }
 
 ///|
+test "receiver can select a basis by length and digest without reconstruction" {
+  let delta = create_delta(signature(b"version1"), b"version2-longer")
+  assert_eq(delta.basis_length(), 8)
+  assert_eq(delta.basis_digest(), digest(b"version1"[:]))
+  assert_eq(delta.output_length(), 15)
+  assert_true(delta.matches_basis(b"version1"))
+  assert_true(!delta.matches_basis(b"version0"))
+  assert_true(!delta.matches_basis(b"short"))
+  let limited = Limits::{ ..Limits::default(), max_bytes: 7, }
+  let rejected = try delta.matches_basis(b"short", limits=limited) catch {
+    LimitExceeded(_) => true
+    _ => false
+  } noraise {
+    _ => false
+  }
+  assert_true(rejected)
+}
+
+///|
 test "standard SHA-256 vectors and unsigned rolling checksum" {
   assert_eq(
     digest(b""[:]),

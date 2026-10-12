@@ -195,6 +195,18 @@ pub fn create_delta(
 ///|
 /// Receiver stage. Verifies the complete basis before applying and the complete
 /// reconstructed output before returning. SHA-256 is integrity, not sender authentication.
+pub fn Delta::matches_basis(
+  self : Delta,
+  basis : Bytes,
+  limits? : Limits = Limits::default(),
+) -> Bool raise SyncError {
+  check_limits(limits)
+  check_size(basis.length(), limits)
+  check_size(self.basis_length, limits)
+  basis.length() == self.basis_length && digest(basis[:]) == self.basis_digest
+}
+
+///|
 pub fn apply_delta(
   basis : Bytes,
   delta : Delta,
@@ -206,8 +218,7 @@ pub fn apply_delta(
   if delta.operations.length() > limits.max_operations {
     raise LimitExceeded("delta operation limit exceeded")
   }
-  if basis.length() != delta.basis_length ||
-    digest(basis[:]) != delta.basis_digest {
+  if !delta.matches_basis(basis, limits~) {
     raise CorruptData("basis does not match signature")
   }
   let out : Array[Byte] = []
