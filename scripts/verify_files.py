@@ -142,9 +142,50 @@ def main() -> None:
         invoke("inspect", corrupted, success=False)
         invoke("apply", old, corrupted, rejected_output, success=False)
         assert not rejected_output.exists()
+        # Check host failures and source/output aliasing without modifying inputs.
+        before_basis = old.read_bytes()
+        before_signature = sig.read_bytes()
+        invoke("signature", old, old, 512, success=False)
+        invoke("delta", sig, old, sig, success=False)
+        invoke("apply", old, folder / "backup_insert.delta", old, success=False)
+        assert old.read_bytes() == before_basis
+        assert sig.read_bytes() == before_signature
+        for block in (0, -1, "not-a-number", 536870913):
+            invoke("signature", old, rejected_output, block, success=False)
+            assert not rejected_output.exists()
+        invoke("signature", folder, rejected_output, success=False)
+        invoke("signature", folder / "missing.bin", rejected_output, success=False)
+        invoke("unknown-command", success=False)
+        invoke("verify", old, success=False)
+        bad_sig = folder / "bad.sig"
+        bad_sig.write_bytes(b"MSIG")
+        invoke("delta", bad_sig, old, rejected_output, success=False)
+        assert not rejected_output.exists()
+        # Independent small-file coverage: empty receiver, short tail, block=1,
+        # oversized block, repeated blocks and every unsigned byte value.
+        tiny_cases = [
+            (b"", b"", 1), (b"", b"\x00\xffcreated", 7),
+            (b"abc", b"", 2), (b"abc", b"abc", 2048),
+            (b"AAAABBBBxy", b"xy---BBBBxyAAAA", 4),
+            (bytes(range(256)), b"\xff\x00" + bytes(range(256)), 1),
+        ]
+        for i, (tiny_basis, tiny_new, block) in enumerate(tiny_cases):
+            paths = [folder / f"tiny-{i}.{suffix}"
+                     for suffix in ("old", "new", "sig", "delta", "out")]
+            a, b, s, d, o = paths
+            a.write_bytes(tiny_basis)
+            b.write_bytes(tiny_new)
+            invoke("signature", a, s, block)
+            check_signature(s.read_bytes(), tiny_basis, block)
+            invoke("delta", s, b, d)
+            check_delta(d.read_bytes(), tiny_basis, tiny_new)
+            invoke("verify", a, d)
+            invoke("apply", a, d, o)
+            assert o.read_bytes() == tiny_new
     print(json.dumps({"oracle": "Python hashlib + independent frame reader",
                       "data": "controlled synthetic bytes, not a production benchmark",
-                      "scenarios": results, "negative_checks": "passed"}, ensure_ascii=False, indent=2))
+                      "scenarios": results, "small_file_cases": len(tiny_cases),
+                      "negative_checks": "passed"}, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
