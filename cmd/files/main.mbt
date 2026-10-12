@@ -82,6 +82,13 @@ fn run(args : Array[String]) -> Unit raise {
         "verified: bytes=\{output.length()}, sha256=\{delta.output_digest()}",
       )
     }
+    ["verify", source, patch] => {
+      let delta = @sync.decode_delta(read_file(patch))
+      @sync.verify_delta(read_file(source), delta)
+      println(
+        "verified: bytes=\{delta.output_length()}, sha256=\{delta.output_digest()}, output_written=false",
+      )
+    }
     ["inspect", patch] => {
       let wire = read_file(patch)
       if wire.length() >= 4 && wire[:4].equal_to_bytes(b"MSIG") {
@@ -99,7 +106,7 @@ fn run(args : Array[String]) -> Unit raise {
     }
     _ =>
       raise UsageError(
-        "usage: signature OLD SIG [BLOCK] | delta SIG NEW DELTA | apply OLD DELTA OUTPUT | inspect DELTA",
+        "usage: signature OLD SIG [BLOCK] | delta SIG NEW DELTA | apply OLD DELTA OUTPUT | verify OLD DELTA | inspect FRAME",
       )
   }
 }

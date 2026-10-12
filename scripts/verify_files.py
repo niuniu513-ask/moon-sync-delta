@@ -110,6 +110,11 @@ def main() -> None:
             inspection = invoke("inspect", patch)
             assert "type=delta" in inspection
             assert f"output_sha256={hashlib.sha256(updated).hexdigest()}" in inspection
+            before = set(folder.iterdir())
+            verification = invoke("verify", old, patch)
+            assert "output_written=false" in verification
+            assert f"sha256={hashlib.sha256(updated).hexdigest()}" in verification
+            assert set(folder.iterdir()) == before
             invoke("apply", old, patch, restored)
             assert restored.read_bytes() == updated
             # The adapter refuses to overwrite an existing output.
@@ -121,6 +126,7 @@ def main() -> None:
                             **metrics, "exact": True})
         wrong = folder / "wrong.bin"
         wrong.write_bytes(basis[:-1] + bytes([basis[-1] ^ 1]))
+        invoke("verify", wrong, folder / "backup_insert.delta", success=False)
         rejected_output = folder / "must-not-exist.bin"
         invoke("apply", wrong, folder / "backup_insert.delta", rejected_output, success=False)
         assert not rejected_output.exists()
@@ -128,9 +134,11 @@ def main() -> None:
         data = bytearray((folder / "backup_insert.delta").read_bytes())
         data[153] ^= 1  # First literal byte; structural parse still succeeds.
         corrupted.write_bytes(data)
+        invoke("verify", old, corrupted, success=False)
         invoke("apply", old, corrupted, rejected_output, success=False)
         assert not rejected_output.exists()
         corrupted.write_bytes(b"MSDL")
+        invoke("verify", old, corrupted, success=False)
         invoke("inspect", corrupted, success=False)
         invoke("apply", old, corrupted, rejected_output, success=False)
         assert not rejected_output.exists()

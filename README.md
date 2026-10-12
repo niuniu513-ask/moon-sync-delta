@@ -81,6 +81,7 @@ assert_eq(restored, updated)
 moon run cmd/files --target js -- signature old.bin old.sig 2048
 moon run cmd/files --target js -- delta old.sig new.bin update.delta
 moon run cmd/files --target js -- apply old.bin update.delta restored.bin
+moon run cmd/files --target js -- verify old.bin update.delta
 moon run cmd/files --target js -- inspect update.delta
 moon run cmd/files --target js -- inspect old.sig
 ```
@@ -88,6 +89,7 @@ moon run cmd/files --target js -- inspect old.sig
 `delta` 命令不读取 `old.bin`。所有输出文件必须不存在，避免覆盖源文件。
 算法先校验重建结果再创建输出；文件系统写入仍可能因磁盘故障失败。
 `inspect` 自动识别签名或差量，显示长度、块数或操作统计及版本摘要；仅验证帧结构，完整性验证需要正确的旧数据。
+`verify` 校验旧文件、操作范围和完整新内容摘要，不创建输出文件；库接口 `verify_delta` 不分配重建缓冲区，但旧文件和差量仍需完整载入内存。它可用于下载后预检，不能替代发送方认证。
 
 独立 Python 检查会创建临时二进制文件，通过 Node 入口验证与 Python `hashlib` 一致的摘要、
 签名字段、六类更新及失败场景：
