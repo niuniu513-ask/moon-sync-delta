@@ -83,11 +83,19 @@ fn run(args : Array[String]) -> Unit raise {
       )
     }
     ["inspect", patch] => {
-      let delta = @sync.decode_delta(read_file(patch))
-      let s = delta.statistics()
-      println(
-        "output=\{s.output_bytes}, reused=\{s.copied_bytes}, literal=\{s.literal_bytes}, wire_bytes=\{s.wire_bytes}",
-      )
+      let wire = read_file(patch)
+      if wire.length() >= 4 && wire[:4].equal_to_bytes(b"MSIG") {
+        let sig = @sync.decode_signature(wire)
+        println(
+          "type=signature, basis=\{sig.basis_length()}, block=\{sig.block_size()}, blocks=\{sig.block_count()}, wire_bytes=\{sig.wire_size()}, sha256=\{sig.basis_digest()}",
+        )
+      } else {
+        let delta = @sync.decode_delta(wire)
+        let s = delta.statistics()
+        println(
+          "type=delta, basis=\{delta.basis_length()}, output=\{s.output_bytes}, reused=\{s.copied_bytes}, literal=\{s.literal_bytes}, wire_bytes=\{s.wire_bytes}, basis_sha256=\{delta.basis_digest()}, output_sha256=\{delta.output_digest()}",
+        )
+      }
     }
     _ =>
       raise UsageError(

@@ -99,11 +99,17 @@ def main() -> None:
         sig = folder / "signature.bin"
         invoke("signature", old, sig, 512)
         check_signature(sig.read_bytes(), basis, 512)
+        inspection = invoke("inspect", sig)
+        assert "type=signature" in inspection and "blocks=128," in inspection
+        assert f"sha256={hashlib.sha256(basis).hexdigest()}" in inspection
         for name, updated in scenarios.items():
             new, patch, restored = (folder / f"{name}.{suffix}" for suffix in ("new", "delta", "restored"))
             new.write_bytes(updated)
             invoke("delta", sig, new, patch)
             metrics = check_delta(patch.read_bytes(), basis, updated)
+            inspection = invoke("inspect", patch)
+            assert "type=delta" in inspection
+            assert f"output_sha256={hashlib.sha256(updated).hexdigest()}" in inspection
             invoke("apply", old, patch, restored)
             assert restored.read_bytes() == updated
             # The adapter refuses to overwrite an existing output.
@@ -125,6 +131,7 @@ def main() -> None:
         invoke("apply", old, corrupted, rejected_output, success=False)
         assert not rejected_output.exists()
         corrupted.write_bytes(b"MSDL")
+        invoke("inspect", corrupted, success=False)
         invoke("apply", old, corrupted, rejected_output, success=False)
         assert not rejected_output.exists()
     print(json.dumps({"oracle": "Python hashlib + independent frame reader",
