@@ -1,5 +1,8 @@
 # MoonSyncDelta wire version 1
 
+This document covers MSIG and the retained legacy MSDL format. Version 0.2 primarily
+delivers standard VCDIFF with an MSVF metadata envelope; see [VCDIFF_EXTENSION.md](VCDIFF_EXTENSION.md).
+
 This is the project's own framed representation, not rsync/librsync wire compatibility.
 All integers are unsigned little-endian 32-bit integers. Hashes are 64 lowercase ASCII hex characters
 representing SHA-256. Bytes have no text encoding assumptions. Trailing bytes are rejected.

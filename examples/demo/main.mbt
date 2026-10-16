@@ -4,14 +4,27 @@ fn demonstrate(label : String, basis : Bytes, updated : Bytes) -> Unit raise {
   let sig_wire = @sync.encode_signature(@sync.signature(basis, block_size=512))
   // Sender does not receive or read the old bytes.
   let received_sig = @sync.decode_signature(sig_wire)
-  let delta = @sync.create_delta(received_sig, updated)
-  let delta_wire = @sync.encode_delta(delta)
+  let transfer = @sync.create_vcdiff(received_sig, updated)
+  let delta_wire = @sync.encode_vcdiff_transfer(transfer)
   // Receiver validates old and reconstructed data.
-  let result = @sync.apply_delta(basis, @sync.decode_delta(delta_wire))
+  let result = @sync.apply_vcdiff(
+    basis,
+    @sync.decode_vcdiff_transfer(delta_wire),
+  )
   assert_eq(result, updated)
-  let s = delta.statistics()
+  // Actual upstream consumption of the standard payload (without MSVF wrapper).
+  assert_eq(
+    @vcdiff.decode(basis, transfer.payload(), @vcdiff.default_decode_limits()),
+    updated,
+  )
+  // Baseline needs both files. Sizes describe this fixture, not a universal win.
+  let baseline = @vcdiff.encode(
+    basis,
+    updated,
+    @vcdiff.default_encode_options(),
+  )
   println(
-    "\{label}: output=\{s.output_bytes}, reused=\{s.copied_bytes}, literal=\{s.literal_bytes}, signature_wire=\{sig_wire.length()}, delta_wire=\{delta_wire.length()}, total_wire=\{sig_wire.length() + delta_wire.length()}, exact=true",
+    "\{label}: output=\{updated.length()}, signature_wire=\{sig_wire.length()}, vcdiff_payload=\{transfer.payload().length()}, transfer_wire=\{delta_wire.length()}, total_wire=\{sig_wire.length() + delta_wire.length()}, upstream_two_file_payload=\{baseline.length()}, upstream_decode=true, exact=true",
   )
 }
 
@@ -23,14 +36,18 @@ fn main {
     (seed >> 24).to_byte()
   })
   try {
-    demonstrate("backup: prepend metadata", basis, b"backup-v2\x00" + basis)
     demonstrate(
-      "asset update: replace 32 bytes",
+      "application resource: prepend metadata",
+      basis,
+      b"resource-v2\x00" + basis,
+    )
+    demonstrate(
+      "offline data package: replace 32 bytes",
       basis,
       basis[:8192].to_owned() + b"asset-v2".repeat(4) + basis[8224:].to_owned(),
     )
     demonstrate(
-      "replica: append records",
+      "cached binary data: append records",
       basis,
       basis + b"new-record\n".repeat(32),
     )

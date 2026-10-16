@@ -1,3 +1,42 @@
+# 0.2 扩展验证记录（2026-10-16）
+
+针对远端签名生成标准 VCDIFF 的新增路径，本地执行并通过：
+
+```text
+moon fmt
+moon info
+moon check --deny-warn --target all
+moon build --target all
+moon test --deny-warn --target all
+moon run examples/demo
+moon build cmd/files --target js --release --deny-warn
+python scripts/verify_vcdiff.py
+python scripts/verify_files.py
+```
+
+- wasm、wasm-gc、js、native 各 27 项测试通过；其中 4 项新增扩展测试内部覆盖多种长度、块大小与错误条件。不是 108 个独立设计的测试。
+- 原版 moon_vcdiff 直接解码扩展 payload；示例同时输出需要旧、新双文件的原版编码基线。扩展不宣称压缩率更优。
+- Python 独立 RFC3284 ADD/COPY SELF profile 解码核对 8 类更新：相同、前插、追加、替换、删除、重排、全变、清空，另测空旧文件。发送端编码时旧文件被临时移走。
+- 验证 MSVF 的长度与 Python hashlib 摘要，坏基底、截断、尾随数据、错误版本/字典/摘要/补丁被拒绝，失败不创建输出；已存在的输出保持原内容。
+- 旧 MSDL 路径的 6 类更新、6 组小文件和失败回归仍通过，属于兼容性证据，不再作为独立备份项目的申报卖点。
+
+合成输入为 65,536 字节、块大小 512：
+
+| 更新 | VCDIFF payload | 签名+MSVF 总传输量 | 新文件 |
+|---|---:|---:|---:|
+| 相同 | 23 | 8,959 | 65,536 |
+| 前插 3 字节 | 28 | 8,964 | 65,539 |
+| 局部替换 | 545 | 9,481 | 65,536 |
+| 完全改变 | 65,558 | 74,494 | 65,536 |
+
+这些是固定种子合成样本，不是生产性能结论。完全改变与小文件明确建议 full；上游双文件编码可能得到更小的补丁，但需要发送端持有旧数据。
+
+Windows 本地验证不证明远端 Linux/Windows CI 已通过；线上状态以本次修订提交的 Actions 为准。Mooncakes 0.2 发布、安装验证与官方初审均未完成；本地测试不能代替选题资格审核。未运行其他 VCDIFF 工具的互通测试或生产大文件压力测试。
+
+---
+
+## 以下为 0.1 历史验证，不作为当前选题定位
+
 # 本地验证记录
 
 验证日期：2026-10-11，Asia/Shanghai。所有结论针对当前本地源码。

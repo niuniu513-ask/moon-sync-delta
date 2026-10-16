@@ -40,6 +40,36 @@ priv suberror UsageError {
 ///|
 fn run(args : Array[String]) -> Unit raise {
   match args {
+    ["vcdiff", signatures, updated, destination] => {
+      let sig_wire = read_file(signatures)
+      let sig = @sync.decode_signature(sig_wire)
+      let new_bytes = read_file(updated)
+      let transfer = @sync.create_vcdiff(sig, new_bytes)
+      let wire = @sync.encode_vcdiff_transfer(transfer)
+      write_new_file(destination, wire)
+      let total = sig_wire.length() + wire.length()
+      let recommendation = if total < new_bytes.length() {
+        "delta"
+      } else {
+        "full"
+      }
+      println(
+        "vcdiff: signature_bytes=\{sig_wire.length()}, payload_bytes=\{transfer.payload().length()}, total_wire=\{total}, recommend=\{recommendation}",
+      )
+    }
+    ["vcdiff-apply", source, patch, destination] => {
+      let transfer = @sync.decode_vcdiff_transfer(read_file(patch))
+      let output = @sync.apply_vcdiff(read_file(source), transfer)
+      write_new_file(destination, output)
+      println(
+        "vcdiff verified: bytes=\{output.length()}, sha256=\{transfer.output_digest()}",
+      )
+    }
+    ["vcdiff-export", patch, destination] => {
+      let transfer = @sync.decode_vcdiff_transfer(read_file(patch))
+      write_new_file(destination, transfer.payload())
+      println("exported: RFC3284 VCDIFF payload, integrity metadata excluded")
+    }
     ["signature", source, destination, .. rest] => {
       if rest.length() > 1 {
         raise UsageError("too many arguments")
@@ -106,7 +136,7 @@ fn run(args : Array[String]) -> Unit raise {
     }
     _ =>
       raise UsageError(
-        "usage: signature OLD SIG [BLOCK] | delta SIG NEW DELTA | apply OLD DELTA OUTPUT | verify OLD DELTA | inspect FRAME",
+        "usage: signature OLD SIG [BLOCK] | vcdiff SIG NEW TRANSFER | vcdiff-apply OLD TRANSFER OUTPUT | vcdiff-export TRANSFER PATCH | delta SIG NEW DELTA | apply OLD DELTA OUTPUT | verify OLD DELTA | inspect FRAME",
       )
   }
 }

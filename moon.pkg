@@ -3,4 +3,5 @@ import {
   "gmlewis/sha256",
   "moonbitlang/core/debug",
   "moonbitlang/core/encoding/utf8",
+  "yangxixi00/moon_vcdiff" @vcdiff,
 }

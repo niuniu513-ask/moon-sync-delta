@@ -1,6 +1,6 @@
 name = "niuniu513-ask/moon-sync-delta"
 
-version = "0.1.0"
+version = "0.2.0"
 
 readme = "README.md"
 
@@ -8,10 +8,16 @@ repository = "https://github.com/niuniu513-ask/moon-sync-delta"
 
 license = "MIT"
 
-description = "Receiver-signature-driven binary delta synchronization in MoonBit"
+description = "Remote-signature VCDIFF encoding extension for yangxixi00/moon_vcdiff"
 
-keywords = [ "rsync", "delta-sync", "rolling-checksum", "backup" ]
+keywords = [
+  "vcdiff",
+  "remote-signature",
+  "ecosystem-extension",
+  "rolling-checksum",
+]
 
 import {
   "gmlewis/sha256@0.18.0",
+  "yangxixi00/moon_vcdiff@0.1.0",
 }

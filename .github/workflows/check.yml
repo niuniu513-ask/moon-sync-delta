@@ -49,6 +49,7 @@ jobs:
         run: |
           moon build cmd/files --target js --release --deny-warn
           python scripts/verify_files.py
+          python scripts/verify_vcdiff.py
       - name: Check format and generated interface
         run: |
           moon fmt

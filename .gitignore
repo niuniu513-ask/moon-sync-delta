@@ -2,3 +2,5 @@
 /.mooncakes/
 申报书.md
 *.tmp
+__pycache__/
+*.pyc

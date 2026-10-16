@@ -1,5 +1,6 @@
 import {
   "niuniu513-ask/moon-sync-delta" @sync,
+  "yangxixi00/moon_vcdiff" @vcdiff,
 }
 
 pkgtype(kind: "executable")

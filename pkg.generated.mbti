@@ -8,17 +8,25 @@ import {
 // Values
 pub fn apply_delta(Bytes, Delta, limits? : Limits) -> Bytes raise SyncError
 
+pub fn apply_vcdiff(Bytes, VcdiffTransfer, limits? : Limits) -> Bytes raise SyncError
+
 pub fn create_delta(Signature, Bytes, limits? : Limits) -> Delta raise SyncError
+
+pub fn create_vcdiff(Signature, Bytes, limits? : Limits) -> VcdiffTransfer raise SyncError
 
 pub fn decode_delta(Bytes, limits? : Limits) -> Delta raise SyncError
 
 pub fn decode_signature(Bytes, limits? : Limits) -> Signature raise SyncError
+
+pub fn decode_vcdiff_transfer(Bytes, limits? : Limits) -> VcdiffTransfer raise SyncError
 
 pub fn digest(BytesView) -> String
 
 pub fn encode_delta(Delta, limits? : Limits) -> Bytes raise SyncError
 
 pub fn encode_signature(Signature, limits? : Limits) -> Bytes raise SyncError
+
+pub fn encode_vcdiff_transfer(VcdiffTransfer, limits? : Limits) -> Bytes raise SyncError
 
 pub fn roll_checksum(UInt, Byte, Byte, Int) -> UInt raise SyncError
 
@@ -97,6 +105,16 @@ pub(all) struct Statistics {
 pub fn Statistics::equal(Self, Self) -> Bool
 pub fn Statistics::not_equal(Self, Self) -> Bool
 pub fn Statistics::to_repr(Self) -> @debug.Repr
+
+pub struct VcdiffTransfer {
+  basis_length : Int
+  basis_digest : String
+  output_length : Int
+  output_digest : String
+  payload : Bytes
+}
+pub fn VcdiffTransfer::output_digest(Self) -> String
+pub fn VcdiffTransfer::payload(Self) -> Bytes
 
 // Type aliases
 
